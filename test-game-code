@@ -1,0 +1,192 @@
+namespace TestGameforGit
+{
+    public partial class basicPlatformer : Form
+    {
+
+        bool goLeft, goRight, jumping, isGameOver;
+
+        int jumpSpeed;
+        int force;
+        int score = 0;
+        int playerSpeed = 7;
+
+        int horizontalSpeed = 5;
+        int verticalSpeed = 3;
+
+        int enemyOneSpeed = 5;
+        int enemyTwoSpeed = 3;
+
+
+        public basicPlatformer()
+        {
+            InitializeComponent();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainGameTimerEvent(object sender, EventArgs e)
+        {
+            txtScore.Text = "Score: " + score;
+
+            player1.Top += jumpSpeed;
+
+            if (goLeft == true)
+            {
+                player1.Left -= playerSpeed;
+
+
+            }
+
+            if (goRight == true)
+            {
+                player1.Left += playerSpeed;
+
+            }
+
+            if (jumping == true && force < 0)
+            {
+                jumping = false;
+
+
+
+            }
+
+            if (jumping == true)
+            {
+                jumpSpeed = -8;
+                force -= 1;
+
+            }
+
+            else
+            {
+                jumpSpeed = 10;
+            }
+
+            foreach(Control x in this.Controls)
+            {
+                if (x is PictureBox)
+                {
+                    if ((string)x.Tag == "platform")
+                    {
+                        if (player1.Bounds.IntersectsWith(x.Bounds))
+                        {
+                            force = 8;
+                            player1.Top = x.Top - player1.Height;
+
+                        }
+
+                        x.BringToFront();
+
+
+                    }
+
+                }
+
+
+
+            }
+
+
+
+        }
+
+        private void player(object sender, EventArgs e)
+        {
+
+        }
+
+        private void KeyIsDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Left)
+            {
+                goLeft = true;
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                goRight = true;
+
+
+            }
+
+            if (e.KeyCode == Keys.Space && jumping == false)
+            {
+                jumping = true;
+            }
+
+
+        }
+
+        private void KeyIsUp(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Left)
+            {
+                goLeft = false;
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                goRight = false;
+
+            }
+
+            if (jumping == true)
+            {
+                jumping = false;
+
+            }
+
+            if (e.KeyCode == Keys.Enter && isGameOver == true)
+            {
+                RestartGame();
+
+            }
+
+        }
+
+
+        private void RestartGame()
+        {
+            jumping = false;
+            goLeft = false;
+            goRight = false;
+            isGameOver = false;
+            score = 0;
+
+            txtScore.Text = "Score " + score;
+
+            foreach (Control x in this.Controls)
+            {
+                if (x is PictureBox && x.Visible == false)
+                {
+                    x.Visible = true;
+
+                }
+
+
+            }
+
+            // reset the poosition of player, platform and enemies
+
+            player1.Left = 67;
+            player1.Top = 722;
+
+            enemyOne.Left = 343;
+            enemyTwo.Left = 419;
+
+            horizontalPlatform.Left = 233;
+            verticalPlatform.Top = 605;
+
+            gameTimer.Start();
+
+
+
+
+        }
+    }
+}
